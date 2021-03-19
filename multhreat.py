@@ -310,11 +310,19 @@ def python_read(filename):
             yield line
 
 # way2:way1中每次IO操作只读取一行，影响效率
+import pandas as pd
 def pandas_read(filename, sep=',', chunksize=5):
-    
+    reader = pd.read_csv(filename, sep, chunksize=chunksize)
+    while True:
+        try:
+            yield reader.get_chunk()
+        except StopIteration:
+            print('Done')
+            break
 
 if __name__ == '__main__':
-    g = python_read('README.md')
+    # g = python_read('README.md')
+    g = pandas_read('README.md', sep='::')
     for c in g:
         print(c)
 
