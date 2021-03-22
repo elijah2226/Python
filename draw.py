@@ -309,7 +309,7 @@ from pyecharts import charts
 # 仪表盘
 gauge = charts.Gauge()
 gauge.add('Python小李子', [('Python机器学习', 30), ('Python基础', 70.), ('Python正则', 90)])
-gauge.render(path='仪表盘.html')
+# gauge.render(path='仪表盘.html')
 
 # 12.漏斗图
 from pyecharts import options as opts
@@ -325,4 +325,77 @@ def funnel_base() -> Funnel:
     )
     return c
 
-funnel_base().render('funnel.html')
+# funnel_base().render('funnel.html')
+
+# 13.日历图
+import datetime
+import random
+from pyecharts.charts import Calendar
+
+def calendar_interval_1() -> Calendar:
+    begin = datetime.date(2021, 1, 1)
+    end = datetime.date(2021, 12, 31)
+    data = [
+        [str(begin + datetime.timedelta(days=i)), random.randint(1000, 25000)]
+        for i in range(0, (end - begin).days + 1, 2)
+    ]
+    calendar = (
+        Calendar(init_opts=opts.InitOpts(width='1200px')).add(
+            '', data, calendar_opts=opts.CalendarOpts(range_='2021'))
+            .set_global_opts(
+                title_opts=opts.TitleOpts(title="Calendar-2021年步数统计"),
+                visualmap_opts=opts.VisualMapOpts(
+                    max_=25000,
+                    min_=1000,
+                    orient='horizontal',
+                    is_piecewise=True,
+                    pos_top='230px',
+                    pos_left='100px'
+                )
+            )
+    )
+    return calendar
+
+# calendar_interval_1().render('calendar.html')
+
+# 14.绘制graph图
+import json
+import os
+from pyecharts.charts import Graph, Page
+
+def graph_base() -> Graph:
+    nodes = [
+        {'name': 'cus1', 'symbolSize': 10},
+        {'name': 'cus2', 'symbolSize': 30},
+        {'name': 'cus3', 'symbolSize': 20}
+    ]
+    links = []
+    for i in nodes:
+        if i.get('name') == 'cus1':
+            continue
+        for j in nodes:
+            if j.get('name') == 'cus1':
+                continue
+            links.append({"source": i.get('name'), 'target': j.get('name')})
+    c = (
+        Graph()
+        .add('', nodes, links, repulsion=800)
+        .set_global_opts(title_opts=opts.TitleOpts(title='customer-influence'))
+    )
+    return c
+
+# graph_base().render('graph.html')
+
+# 15.水球图
+from pyecharts.charts import Liquid, Page
+from pyecharts.globals import SymbolType
+
+def liquid() -> Liquid:
+    c = (
+        Liquid()
+        .add('lq', [0.67, 0.30, 0.15])
+        .set_global_opts(title_opts=opts.TitleOpts(title="Liquid"))
+    )
+    return c
+
+# liquid().render('liquid.html')
